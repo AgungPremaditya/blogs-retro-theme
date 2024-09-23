@@ -25,3 +25,21 @@ body {
     text-wrap: balance;
   }
 }
+
+@font-face {
+  font-family: 'Pixelated';
+  src: url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+}
+
+.pixelated {
+  font-family: 'Pixelated', monospace;
+  image-rendering: pixelated;
+}
+
+.bg-navy-900 {
+  background-color: #0a192f;
+}
+
+.bg-navy-800 {
+  background-color: #112240;
+}
