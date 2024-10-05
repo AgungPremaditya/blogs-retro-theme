@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
 
 const posts = [
     {
@@ -155,79 +154,6 @@ const BlogDetail = ({ params }: { params: { slug: string } }) => {
                     <h1 className="text-3xl md:text-4xl font-bold mb-6 text-yellow-400 pixelated">
                         {post.title}
                     </h1>
-                    <ReactMarkdown
-                        components={{
-                            h1: ({ node, ...props }) => (
-                                <h1
-                                    id={props.children[0]
-                                        .toLowerCase()
-                                        .replace(/ /g, "-")}
-                                    className="text-2xl md:text-3xl font-bold mt-8 mb-4 text-yellow-400 pixelated"
-                                    {...props}
-                                />
-                            ),
-                            h2: ({ node, ...props }) => (
-                                <h2
-                                    id={props.children[0]
-                                        .toLowerCase()
-                                        .replace(/ /g, "-")}
-                                    className="text-xl md:text-2xl font-bold mt-6 mb-3 text-yellow-300 pixelated"
-                                    {...props}
-                                />
-                            ),
-                            h3: ({ node, ...props }) => (
-                                <h3
-                                    id={props.children[0]
-                                        .toLowerCase()
-                                        .replace(/ /g, "-")}
-                                    className="text-lg md:text-xl font-bold mt-4 mb-2 text-yellow-200 pixelated"
-                                    {...props}
-                                />
-                            ),
-                            p: ({ node, ...props }) => (
-                                <p
-                                    className="mb-4 leading-relaxed text-sm md:text-base"
-                                    {...props}
-                                />
-                            ),
-                            a: ({ node, ...props }) => (
-                                <a
-                                    className="text-yellow-400 hover:underline"
-                                    {...props}
-                                />
-                            ),
-                            code: ({
-                                node,
-                                inline,
-                                className,
-                                children,
-                                ...props
-                            }) => {
-                                const match = /language-(\w+)/.exec(
-                                    className || "",
-                                );
-                                return !inline ? (
-                                    <pre className="bg-navy-800 p-4 rounded-lg overflow-x-auto my-4">
-                                        <code
-                                            className="text-xs md:text-sm"
-                                            {...props}
-                                        >
-                                            {children}
-                                        </code>
-                                    </pre>
-                                ) : (
-                                    <code
-                                        className="bg-navy-800 px-1 rounded text-xs md:text-sm"
-                                        {...props}
-                                    >
-                                        {children}
-                                    </code>
-                                );
-                            },
-                        }}
-                    >
-                        {post.content}
-                    </ReactMarkdown>
                 </article>
             </main>
         </div>

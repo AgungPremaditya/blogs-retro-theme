@@ -2,7 +2,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Clock } from "lucide-react";
 
 export default function Blogs() {
     const [currentTime, setCurrentTime] = useState<Date | null>(null);
