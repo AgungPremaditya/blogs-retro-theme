@@ -1,13 +1,17 @@
-#Stage 1: Build the application
-FROM node:lts-alpine AS builder
+FROM oven/bun:alpine
+
+RUN bun --version
+
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm install
+COPY package.json bun.lockb ./
+
+RUN bun install
 
 COPY . .
-RUN npx next build
+
+RUN bunx next build
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["bun", "dev"]
