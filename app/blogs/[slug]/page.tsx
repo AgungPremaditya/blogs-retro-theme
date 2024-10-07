@@ -68,7 +68,7 @@ export default function PostDetail({ params }: { params: { slug: string } }) {
         }
     }, [htmlContent]);
 
-    //
+    // Handle scroll event to highlight active section
     useEffect(() => {
         const handleScroll = () => {
             if (contentRef.current) {
@@ -90,91 +90,133 @@ export default function PostDetail({ params }: { params: { slug: string } }) {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Handle article cannot scroll when sidebar is open
+    useEffect(() => {
+        if (isSidebarOpen) {
+            document.body.classList.add("no-scroll");
+        } else {
+            document.body.classList.remove("no-scroll");
+        }
+
+        return () => {
+            document.body.classList.remove("no-scroll");
+        };
+    }, [isSidebarOpen]);
+
     if (!blog) return <div>Loading...</div>;
 
     return (
         <div className="min-h-screen bg-navy-900 text-gray-300 font-mono">
-            <main className="container mx-auto px-4 py-8 flex flex-col lg:flex-row">
-                <button
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="lg:hidden mb-4 px-4 py-2 bg-yellow-400 text-navy-900 rounded pixelated"
-                >
-                    {isSidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
-                </button>
+            <div className="container mx-auto px-4 py-8">
+                <div className="lg:flex lg:gap-8">
+                    <aside className="lg:w-1/4 mb-8 lg:mb-0">
+                        <div className="lg:sticky lg:top-8">
+                            <button
+                                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                                className="lg:hidden fixed bottom-4 right-4 z-50 w-12 h-12 rounded-full bg-yellow-400 text-indigo-900 flex items-center justify-center shadow-lg pixelated transition-transform duration-300 ease-in-out transform hover:scale-110"
+                            >
+                                {isSidebarOpen ? "X" : "≡"}
+                            </button>
 
-                <aside
-                    className={`lg:w-1/4 mb-8 lg:mb-0 ${isSidebarOpen ? "block" : "hidden lg:block"}`}
-                >
-                    <div className="lg:sticky lg:top-4">
-                        <h2 className="text-xl font-bold mb-4 text-yellow-400 pixelated">
-                            Table of Contents
-                        </h2>
-                        <ul className="space-y-2">
-                            {tableOfContents.map((item) => (
-                                <li
-                                    key={item.id}
-                                    className={`pixelated ${activeSection === item.id ? "text-yellow-400" : "text-gray-400"}`}
-                                    style={{
-                                        marginLeft: `${(item.level - 1) * 0.5}rem`,
-                                    }}
+                            <div
+                                className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out ${
+                                    isSidebarOpen
+                                        ? "opacity-50 z-40"
+                                        : "opacity-0 pointer-events-none"
+                                } lg:hidden`}
+                                onClick={() => setIsSidebarOpen(false)}
+                            ></div>
+
+                            <div
+                                className={`fixed -bottom-8 left-0 right-0 z-50 bg-navy-900 overflow-y-auto transition-transform duration-300 ease-in-out transform ${
+                                    isSidebarOpen
+                                        ? "translate-y-0"
+                                        : "translate-y-full"
+                                } lg:static lg:translate-y-0 lg:block lg:h-auto lg:bg-transparent`}
+                                style={{ maxHeight: "calc(80vh + 2em)" }}
+                            >
+                                <div className="p-6 lg:p-0">
+                                    <div className="mb-8 lg:mb-12">
+                                        <h2 className="text-xl font-bold mb-4 text-yellow-400 pixelated">
+                                            Table of Contents
+                                        </h2>
+                                        <ul className="space-y-2">
+                                            {tableOfContents.map((item) => (
+                                                <li
+                                                    key={item.id}
+                                                    className={`pixelated ${activeSection === item.id ? "text-yellow-400" : "text-gray-400"}`}
+                                                    style={{
+                                                        marginLeft: `${(item.level - 1) * 0.5}rem`,
+                                                    }}
+                                                >
+                                                    <a
+                                                        href={`#${item.id}`}
+                                                        className="hover:text-yellow-200"
+                                                    >
+                                                        {item.title}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        <h2 className="text-xl font-bold mt-8 mb-4 text-yellow-400 pixelated">
+                                            Tags
+                                        </h2>
+                                        <ul className="space-y-2">
+                                            {blog.tags.map((tag) => (
+                                                <li
+                                                    key={tag}
+                                                    className="text-gray-400"
+                                                >
+                                                    <Link
+                                                        href={`/category/${tag.toLowerCase().replace(/ /g, "-")}`}
+                                                        className="hover:text-yellow-200"
+                                                    >
+                                                        #{tag}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <main className="lg:w-3/4">
+                        <article ref={contentRef}>
+                            <div className="flex items-center space-x-2 text-sm md:text-base mb-4">
+                                <Link
+                                    href="/"
+                                    className="text-yellow-400 hover:underline pixelated"
                                 >
-                                    <a
-                                        href={`#${item.id}`}
-                                        className="hover:text-yellow-200"
-                                    >
-                                        {item.title}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-
-                        <h2 className="text-xl font-bold mt-8 mb-4 text-yellow-400 pixelated">
-                            Tags
-                        </h2>
-                        <ul className="space-y-2">
-                            {blog.tags.map((tag) => (
-                                <li key={tag} className="text-gray-400">
-                                    <Link
-                                        href={`/category/${tag.toLowerCase().replace(/ /g, "-")}`}
-                                        className="hover:text-yellow-200"
-                                    >
-                                        #{tag}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </aside>
-
-                <article className="lg:w-3/4 lg:pl-8" ref={contentRef}>
-                    <div className="flex items-center space-x-2 text-sm md:text-base mb-4">
-                        <Link
-                            href="/"
-                            className="text-yellow-400 hover:underline pixelated"
-                        >
-                            Home
-                        </Link>
-                        <span className="text-gray-500">&gt;</span>
-                        <Link
-                            href="/blogs"
-                            className="text-yellow-400 hover:underline pixelated"
-                        >
-                            Blogs
-                        </Link>
-                        <span className="text-gray-500">&gt;</span>
-                        <span className="text-yellow-200 pixelated">
-                            {blog.title}
-                        </span>
-                    </div>
-                    <h1 className="text-3xl md:text-4xl font-bold mb-6 text-yellow-400 pixelated">
-                        {blog.title}
-                    </h1>
-                    <div
-                        className="prose prose-invert prose-yellow max-w-none"
-                        dangerouslySetInnerHTML={{ __html: htmlContent }}
-                    />
-                </article>
-            </main>
+                                    Home
+                                </Link>
+                                <span className="text-gray-500">&gt;</span>
+                                <Link
+                                    href="/blogs"
+                                    className="text-yellow-400 hover:underline pixelated"
+                                >
+                                    Blogs
+                                </Link>
+                                <span className="text-gray-500">&gt;</span>
+                                <span className="text-yellow-200 pixelated">
+                                    {blog.title}
+                                </span>
+                            </div>
+                            <h1 className="text-3xl md:text-4xl font-bold mb-6 text-yellow-400 pixelated">
+                                {blog.title}
+                            </h1>
+                            <div
+                                className="prose prose-invert prose-yellow max-w-none"
+                                dangerouslySetInnerHTML={{
+                                    __html: htmlContent,
+                                }}
+                            />
+                        </article>
+                    </main>
+                </div>
+            </div>
 
             <footer className="mt-12 p-4 text-center text-gray-400">
                 <p>&copy; 2024 Schias. All rights reserved.</p>

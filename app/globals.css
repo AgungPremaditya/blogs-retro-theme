@@ -105,3 +105,9 @@ body {
     padding-left: 20px;
     padding-bottom: 10px;
 }
+.prose hr {
+    margin-bottom: 1.5em;
+}
+.no-scroll {
+    overflow: hidden;
+}
