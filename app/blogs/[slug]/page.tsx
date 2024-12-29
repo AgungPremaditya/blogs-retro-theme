@@ -11,6 +11,7 @@ import gfm from "remark-gfm";
 import { fetchBlogBySlug, IBlog } from "@/service/blogs";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "@/service/firebase";
+import LoadingWrapper from "@/app/components/loadings";
 
 interface TocItem {
     id: string;
@@ -103,7 +104,7 @@ export default function PostDetail({ params }: { params: { slug: string } }) {
         };
     }, [isSidebarOpen]);
 
-    if (!blog) return <div>Loading...</div>;
+    if (!blog) return <LoadingWrapper />;
 
     return (
         <div className="min-h-screen bg-navy-900 text-gray-300 font-mono">

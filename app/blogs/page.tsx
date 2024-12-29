@@ -37,7 +37,7 @@ export default function Blogs() {
     const posts = [
         {
             id: 1,
-            image: "https://cdn.myanimelist.net/images/anime/1782/128859l.jpg",
+            image: "https://placehold.co/1092x576/fef9c3/0a192f/png?text=%3C%20/%20%3E",
             title: "Backend Optimization (Case: PAMA Project)",
             slug: "backend-optimization-case-pama-project",
             shordDesc:
@@ -46,7 +46,7 @@ export default function Blogs() {
         },
         {
             id: 2,
-            image: "https://cdn.myanimelist.net/images/anime/1782/128859l.jpg",
+            image: "https://placehold.co/1092x576/fef9c3/0a192f/png?text=%3C%20/%20%3E",
             title: "Journey with v0.dev frontend building",
             slug: "journey-with-v0-dev-frontend-building",
             shordDesc:

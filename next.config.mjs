@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['cdn.myanimelist.net'],
+        domains: ['cdn.myanimelist.net', 'placehold.co'],
     },
     env: {
         FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
