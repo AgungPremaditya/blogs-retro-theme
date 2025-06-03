@@ -128,20 +128,35 @@ export default function Blogs() {
                     {posts.map((post) => (
                         <article
                             key={post.id}
-                            className="bg-retro-dark border-2 border-yellow-400 p-4 hover:bg-retro-light transition-colors flex flex-col rounded-lg shadow-lg"
+                            className="bg-retro-dark border-2 border-yellow-400 p-4 hover:bg-retro-light transition-all duration-300 flex flex-col rounded-lg shadow-lg group"
                         >
-                            <div className="mb-4 relative h-48 group overflow-hidden rounded">
-                                <Image
-                                    src={getPostImage(post)}
-                                    alt={`Cover image for ${post.title}`}
-                                    layout="fill"
-                                    objectFit="cover"
-                                    className="transition-transform duration-300 group-hover:scale-110"
-                                    priority={false}
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-retro-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="mb-4 relative h-48 overflow-hidden rounded-lg">
+                                {/* Image container with hover effects */}
+                                <div className="absolute inset-0 bg-retro-black transition-transform duration-700 ease-in-out group-hover:scale-110">
+                                    <Image
+                                        src={getPostImage(post)}
+                                        alt={`Cover image for ${post.title}`}
+                                        layout="fill"
+                                        objectFit="cover"
+                                        className="transition-all duration-700 ease-in-out group-hover:brightness-110"
+                                        priority={false}
+                                    />
+                                </div>
+                                
+                                {/* Overlay effects */}
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                                    {/* Top gradient */}
+                                    <div className="absolute inset-0 bg-gradient-to-b from-yellow-400/20 to-transparent transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-in-out" />
+                                    
+                                    {/* Bottom gradient */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-retro-black/90 to-transparent" />
+                                    
+                                    {/* Scanline effect */}
+                                    <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,_rgba(255,216,102,0.1)_50%,_transparent_100%)] bg-[length:100%_4px] animate-scan" />
+                                </div>
                             </div>
-                            <h3 className="text-xl font-bold mb-2 text-yellow-400 pixelated">
+
+                            <h3 className="text-xl font-bold mb-2 text-yellow-400 pixelated group-hover:text-yellow-300 transition-colors duration-300">
                                 {post.title}
                             </h3>
                             <div className="mb-4 flex flex-wrap gap-2">
@@ -158,7 +173,7 @@ export default function Blogs() {
                                 </span>
                                 <Link
                                     href={`/blogs/${post.slug}`}
-                                    className="inline-block px-4 py-2 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-retro-black transition-colors pixelated font-bold rounded"
+                                    className="inline-block px-4 py-2 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-retro-black transition-all duration-300 pixelated font-bold rounded hover:scale-105"
                                 >
                                     Read More &gt;
                                 </Link>
