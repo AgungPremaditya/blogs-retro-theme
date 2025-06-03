@@ -1,7 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
-import { blogService, type Post, type PaginationMeta } from '@/service';
 import Link from 'next/link';
+import { blogService, type Post, type PaginationMeta } from '@/service';
+import { useDebounce } from '../hooks/useDebounce';
 
 // Custom debounce function
 function debounce<T extends (...args: any[]) => any>(
@@ -29,103 +30,64 @@ export function SearchModal({
     isOpen, 
     onClose, 
     onSearch, 
-    searchQuery, 
+    searchQuery,
     setSearchQuery,
-    currentPosts = [], // Default to empty array
-    currentMeta = null // Default to null
+    currentPosts = [], 
+    currentMeta = null
 }: SearchModalProps) {
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [displayPosts, setDisplayPosts] = useState<Post[]>(currentPosts);
     const [isLoading, setIsLoading] = useState(false);
-    const [page, setPage] = useState(1);
-    const [meta, setMeta] = useState<PaginationMeta | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(0);
-
-    // Debounced search function
-    const debouncedSearch = useCallback(
-        debounce(async (query: string) => {
-            setIsLoading(true);
-            setLoadingProgress(0);
-            try {
-                if (query.trim() === '') {
-                    // If empty query, use current posts from main page
-                    setPosts(currentPosts);
-                    setMeta(currentMeta);
-                } else {
-                    // Otherwise, search through API
-                    const response = await blogService.getAllPosts(1, (progress) => {
-                        setLoadingProgress(progress);
-                    }, query);
-                    setPosts(response.data);
-                    setMeta(response.meta);
-                }
-                setPage(1);
-            } catch (error) {
-                console.error('Error searching posts:', error);
-                // On error, show empty state
-                setPosts([]);
-                setMeta(null);
-            } finally {
-                setIsLoading(false);
-            }
-        }, 300),
-        [currentPosts, currentMeta]
-    );
-
-    // Load more posts
-    const loadMorePosts = async () => {
-        if (!meta || page >= meta.totalPages || isLoading) return;
-
-        setIsLoading(true);
-        setLoadingProgress(0);
-        try {
-            const nextPage = page + 1;
-            const response = await blogService.getAllPosts(nextPage, (progress) => {
-                setLoadingProgress(progress);
-            }, searchQuery);
-            setPosts(prev => [...prev, ...response.data]);
-            setMeta(response.meta);
-            setPage(nextPage);
-        } catch (error) {
-            console.error('Error loading more posts:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    
+    // Debounce the search query with 300ms delay
+    const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
     // Handle search input changes
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newQuery = e.target.value;
         setSearchQuery(newQuery);
-        onSearch(newQuery);
-        debouncedSearch(newQuery);
     };
 
-    // Handle infinite scroll
-    const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-        const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-        if (scrollHeight - scrollTop <= clientHeight * 1.5) {
-            loadMorePosts();
+    // Effect for handling the debounced search
+    useEffect(() => {
+        const performSearch = async () => {
+            if (debouncedSearchQuery.trim() === '') {
+                setDisplayPosts(currentPosts);
+                return;
+            }
+
+            setIsLoading(true);
+            try {
+                const response = await blogService.getAllPosts(1, undefined, debouncedSearchQuery);
+                setDisplayPosts(response.data);
+            } catch (error) {
+                console.error('Error searching posts:', error);
+                setDisplayPosts([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        performSearch();
+    }, [debouncedSearchQuery, currentPosts]);
+
+    // Reset to default posts when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            setDisplayPosts(currentPosts);
         }
-    }, [loadMorePosts]);
+    }, [isOpen, currentPosts]);
 
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
-            // Use current posts from main page on initial open
-            setPosts(currentPosts);
-            setMeta(currentMeta);
-            setPage(1);
         } else {
             document.body.style.overflow = 'unset';
-            // Reset state when modal closes
-            setPosts([]);
-            setPage(1);
-            setMeta(null);
         }
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [isOpen, currentPosts, currentMeta]);
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -141,7 +103,10 @@ export function SearchModal({
             <div className="relative min-h-screen flex items-start justify-center p-4">
                 <div className="relative w-full max-w-2xl mt-20 bg-[#1a1a1a] rounded-xl shadow-2xl border border-yellow-400/20">
                     {/* Search header */}
-                    <div className="flex items-center justify-end p-2">
+                    <div className="flex items-center justify-between p-2">
+                        <div className="text-[#EAEAEA]/40 text-xs">
+                            {isLoading ? 'Searching...' : ''}
+                        </div>
                         <kbd className="px-2 py-1 text-xs font-mono bg-[#252525] text-[#EAEAEA]/70 rounded border border-[#333333]">
                             Esc
                         </kbd>
@@ -161,13 +126,10 @@ export function SearchModal({
                     </div>
 
                     {/* Search results */}
-                    <div 
-                        className="px-2 pb-2 max-h-[60vh] overflow-y-auto"
-                        onScroll={handleScroll}
-                    >
-                        {posts.length > 0 ? (
+                    <div className="px-2 pb-2 max-h-[60vh] overflow-y-auto">
+                        {displayPosts.length > 0 ? (
                             <div className="space-y-1">
-                                {posts.map((post) => (
+                                {displayPosts.map((post) => (
                                     <Link
                                         key={post.id}
                                         href={`/blogs/${post.slug}`}
@@ -195,15 +157,6 @@ export function SearchModal({
                             <div className="text-center py-8">
                                 <div className="text-[#EAEAEA]/50 text-sm">
                                     {isLoading ? 'Loading posts...' : 'No posts found'}
-                                </div>
-                            </div>
-                        )}
-                        
-                        {/* Loading indicator */}
-                        {isLoading && posts.length > 0 && (
-                            <div className="text-center py-4">
-                                <div className="text-[#EAEAEA]/50 text-sm">
-                                    Loading more posts... {loadingProgress}%
                                 </div>
                             </div>
                         )}
