@@ -38,38 +38,42 @@ export function SearchModal({
     const [displayPosts, setDisplayPosts] = useState<Post[]>(currentPosts);
     const [isLoading, setIsLoading] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
+    const [isVisible, setIsVisible] = useState(false);
     
     // Debounce the search query with 300ms delay
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
+    // Handle animation timing
+    useEffect(() => {
+        if (isOpen) {
+            setIsVisible(true);
+        } else {
+            const timer = setTimeout(() => setIsVisible(false), 300); // Match transition duration
+            return () => clearTimeout(timer);
+        }
+    }, [isOpen]);
+
     // Handle search input changes
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const newQuery = e.target.value;
         setSearchQuery(newQuery);
+        
+        if (newQuery.trim() === '') {
+            setDisplayPosts(currentPosts);
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const response = await blogService.getAllPosts(1, undefined, newQuery);
+            setDisplayPosts(response.data);
+        } catch (error) {
+            console.error('Error searching posts:', error);
+            setDisplayPosts([]);
+        } finally {
+            setIsLoading(false);
+        }
     };
-
-    // Effect for handling the debounced search
-    useEffect(() => {
-        const performSearch = async () => {
-            if (debouncedSearchQuery.trim() === '') {
-                setDisplayPosts(currentPosts);
-                return;
-            }
-
-            setIsLoading(true);
-            try {
-                const response = await blogService.getAllPosts(1, undefined, debouncedSearchQuery);
-                setDisplayPosts(response.data);
-            } catch (error) {
-                console.error('Error searching posts:', error);
-                setDisplayPosts([]);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        performSearch();
-    }, [debouncedSearchQuery, currentPosts]);
 
     // Reset to default posts when modal opens
     useEffect(() => {
@@ -89,19 +93,22 @@ export function SearchModal({
         };
     }, [isOpen]);
 
-    if (!isOpen) return null;
+    if (!isOpen && !isVisible) return null;
 
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-            {/* Backdrop */}
+        <div className={`fixed inset-0 z-50 overflow-y-auto transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+            {/* Backdrop with blur */}
             <div 
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+                className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-all duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
                 onClick={onClose}
             ></div>
 
             {/* Modal */}
             <div className="relative min-h-screen flex items-start justify-center p-4">
-                <div className="relative w-full max-w-2xl mt-20 bg-[#1a1a1a] rounded-xl shadow-2xl border border-yellow-400/20">
+                <div 
+                    className={`relative w-full max-w-2xl mt-20 bg-[#1a1a1a] rounded-xl shadow-2xl border border-yellow-400/20 transition-all duration-300 transform
+                        ${isOpen ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-4 opacity-0 scale-95'}`}
+                >
                     {/* Search header */}
                     <div className="flex items-center justify-between p-2">
                         <div className="text-[#EAEAEA]/40 text-xs">
@@ -125,41 +132,45 @@ export function SearchModal({
                         />
                     </div>
 
-                    {/* Search results */}
+                    {/* Search results with fade in animation */}
                     <div className="px-2 pb-2 max-h-[60vh] overflow-y-auto">
-                        {displayPosts.length > 0 ? (
-                            <div className="space-y-1">
-                                {displayPosts.map((post) => (
-                                    <Link
-                                        key={post.id}
-                                        href={`/blogs/${post.slug}`}
-                                        onClick={onClose}
-                                        className="block w-full p-2 text-left rounded-lg hover:bg-[#252525] group transition-colors duration-200"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className="text-[#EAEAEA]/70 group-hover:text-[#EAEAEA]">📄</div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="text-sm font-mono text-[#EAEAEA] group-hover:text-yellow-400 truncate">
-                                                    {post.title}
-                                                </div>
-                                                <div className="text-xs text-[#EAEAEA]/50 flex items-center gap-2">
-                                                    <span className="bg-yellow-400/10 px-2 py-0.5 rounded text-yellow-400">
-                                                        {post.category.name}
-                                                    </span>
-                                                    <span className="truncate">{post.content.substring(0, 100)}...</span>
+                        <div className={`transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+                            {displayPosts.length > 0 ? (
+                                <div className="space-y-1">
+                                    {displayPosts.map((post, index) => (
+                                        <Link
+                                            key={post.id}
+                                            href={`/blogs/${post.slug}`}
+                                            onClick={onClose}
+                                            className={`block w-full p-2 text-left rounded-lg hover:bg-[#252525] group transition-all duration-200
+                                                transform ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}
+                                                transition-all duration-200 delay-[${index * 50}ms]`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className="text-[#EAEAEA]/70 group-hover:text-[#EAEAEA]">📄</div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-sm font-mono text-[#EAEAEA] group-hover:text-yellow-400 truncate">
+                                                        {post.title}
+                                                    </div>
+                                                    <div className="text-xs text-[#EAEAEA]/50 flex items-center gap-2">
+                                                        <span className="bg-yellow-400/10 px-2 py-0.5 rounded text-yellow-400">
+                                                            {post.category.name}
+                                                        </span>
+                                                        <span className="truncate">{post.content.substring(0, 100)}...</span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-center py-8">
-                                <div className="text-[#EAEAEA]/50 text-sm">
-                                    {isLoading ? 'Loading posts...' : 'No posts found'}
+                                        </Link>
+                                    ))}
                                 </div>
-                            </div>
-                        )}
+                            ) : (
+                                <div className="text-center py-8">
+                                    <div className="text-[#EAEAEA]/50 text-sm">
+                                        {isLoading ? 'Loading posts...' : 'No posts found'}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
