@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { blogService, type Post, type PaginationMeta } from "@/service";
 import { RetroLoading } from "@/app/components/RetroLoading";
+import { SearchBar } from "@/app/components/SearchBar";
 
 const getPostImage = (post: Post): string => {
     // Array of placeholder images with different designs
@@ -31,6 +32,7 @@ export default function Blogs() {
     const [error, setError] = useState<string | null>(null);
     const [meta, setMeta] = useState<PaginationMeta | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -93,6 +95,13 @@ export default function Blogs() {
         }
     };
 
+    const filteredPosts = posts.filter(post => 
+        searchQuery === "" || 
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.category.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     if (isLoading && posts.length === 0) {
         return (
             <div className="bg-retro-black flex min-h-screen flex-col items-center justify-center font-mono text-gray-300">
@@ -119,13 +128,21 @@ export default function Blogs() {
                         <br />{" "}
                         {currentTime ? formatDate(currentTime) : "Loading..."}
                     </h2>
-                    <p className="text-lg md:text-xl text-paper-50">
-                        Wanna explore somethings?
-                    </p>
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <p className="text-lg md:text-xl text-[#EAEAEA]">
+                            Wanna explore somethings?
+                        </p>
+                        <SearchBar 
+                            onSearch={setSearchQuery}
+                            placeholder="Search posts..."
+                            currentPosts={posts}
+                            currentMeta={meta}
+                        />
+                    </div>
                 </section>
 
                 <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {posts.map((post) => (
+                    {filteredPosts.map((post) => (
                         <article
                             key={post.id}
                             className="bg-retro-dark border-2 border-yellow-400 p-4 hover:bg-retro-light transition-all duration-300 flex flex-col rounded-lg shadow-lg group"
