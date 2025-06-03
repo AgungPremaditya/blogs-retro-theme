@@ -89,11 +89,14 @@ export default function RetroParallaxLandingPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-[#0a192f] text-[#ffd700] font-pixel">
-            <div
-                className="relative h-screen overflow-hidden"
-                // style={{ background: "aqua" }}
-            >
+        <div className="min-h-screen font-pixel relative">
+            {/* Grain overlay */}
+            <div className="fixed inset-0 z-10 pointer-events-none opacity-[0.15] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iLjA1Ii8+PC9zdmc+')]"></div>
+            
+            {/* Radial gradient background */}
+            <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_top_center,_#111_0%,_#000_100%)]"></div>
+
+            <div className="relative h-screen overflow-hidden z-20">
                 <ParallaxLayer
                     speed={scrollY * 0.0062}
                     className="absolute inset-0 left-[42em] -bottom-[12em]"
@@ -135,21 +138,21 @@ export default function RetroParallaxLandingPage() {
                     />
                 </ParallaxLayer>
                 <div className="absolute inset-0 flex items-top justify-center z-40 top-48">
-                    <div className="text-center">
-                        <h1 className="text-6xl mb-4 pixelated bg-[#ffd700] text-[#0a192f] p-3">
-                            Schias
+                    <div className="text-center space-y-4">
+                        <h1 className="text-6xl md:text-7xl lg:text-8xl font-mono font-bold bg-[#ffd700] text-[#0a192f]/90 px-6 py-4 shadow-[4px_4px_0px_0px_rgba(10,25,47,0.9)] hover:shadow-[6px_6px_0px_0px_rgba(10,25,47,0.9)] transition-all duration-300 border-2 border-[#0a192f]/90 tracking-wider">
+                            SCHIAS
                         </h1>
-                        <p className="text-2xl pixelated bg-[#ffd700] text-[#0a192f] p-3">
-                            Full-stack Developer
+                        <p className="text-2xl md:text-3xl font-mono font-bold bg-[#ffd700] text-[#0a192f]/90 px-4 py-3 shadow-[3px_3px_0px_0px_rgba(10,25,47,0.9)] inline-block border-2 border-[#0a192f]/90 tracking-wide">
+                            FULL-STACK DEVELOPER
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 py-16">
+            <div className="container mx-auto px-4 py-16 relative z-20">
                 <section className="mb-16">
-                    <h2 className="text-3xl mb-8 pixelated">About Me</h2>
-                    <p className="pixelated text-lg">
+                    <h2 className="text-3xl mb-8 pixelated text-[#EAEAEA]">About Me</h2>
+                    <p className="pixelated text-lg text-[#EAEAEA]">
                         I&apos;m a passionate full-stack developer with a love
                         for creating innovative web applications. My expertise
                         spans across various technologies, allowing me to build
@@ -158,7 +161,7 @@ export default function RetroParallaxLandingPage() {
                 </section>
 
                 <section className="mb-16">
-                    <h2 className="text-3xl mb-8 pixelated">Skills</h2>
+                    <h2 className="text-3xl mb-8 pixelated text-[#EAEAEA]">Skills</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
                             "JavaScript",
@@ -181,17 +184,17 @@ export default function RetroParallaxLandingPage() {
                 </section>
 
                 <section className="mb-16">
-                    <h2 className="text-3xl mb-8 pixelated">Projects</h2>
+                    <h2 className="text-3xl mb-8 pixelated text-[#EAEAEA]">Projects</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {projects.map((project, _) => (
                             <div
                                 key={project.name}
                                 className="bg-[#0a192f] border border-[#ffd700] p-6 rounded-lg"
                             >
-                                <h3 className="text-2xl mb-4 pixelated">
+                                <h3 className="text-2xl mb-4 pixelated text-[#EAEAEA]">
                                     {project.name}
                                 </h3>
-                                <p className="pixelated mb-6">
+                                <p className="pixelated mb-6 text-[#EAEAEA]">
                                     {project.description}
                                 </p>
                                 <a
@@ -209,39 +212,49 @@ export default function RetroParallaxLandingPage() {
                 </section>
 
                 <section className="mb-16">
-                    <h2 className="text-3xl mb-8 pixelated">Contact</h2>
-                    <p className="pixelated mb-6 text-lg">
+                    <h2 className="text-3xl mb-8 pixelated text-[#EAEAEA]">Contact</h2>
+                    <p className="pixelated mb-6 text-lg text-[#EAEAEA]">
                         Feel free to reach out to me for collaborations or
                         opportunities!
                     </p>
                     <div className="flex justify-center space-x-8">
-                        <a href="#" className="pixelated-icon">
+                        <a href="#" className="pixelated-icon text-[#EAEAEA]">
                             <Github className="w-12 h-12" />
                         </a>
-                        <a href="#" className="pixelated-icon">
+                        <a href="#" className="pixelated-icon text-[#EAEAEA]">
                             <Twitter className="w-12 h-12" />
                         </a>
                     </div>
                 </section>
 
-                <footer className="text-center pixelated">
+                <footer className="text-center pixelated text-[#EAEAEA]">
                     <p>&copy; 2023 Schias. All rights reserved.</p>
                 </footer>
             </div>
 
             <style jsx global>{`
-                @font-face {
-                    font-family: "PixelFont";
-                    src: url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+                @keyframes grain {
+                    0%, 100% { transform: translate(0, 0) }
+                    10% { transform: translate(-2%, -2%) }
+                    20% { transform: translate(2%, 2%) }
+                    30% { transform: translate(-1%, 1%) }
+                    40% { transform: translate(1%, -1%) }
+                    50% { transform: translate(-2%, 2%) }
+                    60% { transform: translate(2%, -2%) }
+                    70% { transform: translate(-1%, -1%) }
+                    80% { transform: translate(1%, 1%) }
+                    90% { transform: translate(-2%, -2%) }
                 }
 
                 .font-pixel {
-                    font-family: "PixelFont", monospace;
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+                    letter-spacing: 0.1em;
                 }
 
                 .pixelated {
                     image-rendering: pixelated;
                     -webkit-font-smoothing: none;
+                    text-shadow: 2px 2px 0px rgba(10, 25, 47, 0.2);
                 }
 
                 .pixelated-icon {
