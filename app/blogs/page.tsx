@@ -2,11 +2,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { blogService, type Post, type PaginationMeta } from "@/service";
+import { blogService, type PostList, type PaginationMeta } from "@/service";
 import { RetroLoading } from "@/app/components/RetroLoading";
 import { SearchBar } from "@/app/components/SearchBar";
 
-const getPostImage = (post: Post): string => {
+const getPostImage = (post: PostList): string => {
     // Array of placeholder images with different designs
     const placeholders = [
         `https://placehold.co/600x400/1a1b26/ffd866/png?text=${encodeURIComponent(post.category.name)}`,
@@ -26,14 +26,14 @@ const getPostImage = (post: Post): string => {
 
 export default function Blogs() {
     const [currentTime, setCurrentTime] = useState<Date | null>(null);
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<PostList[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [meta, setMeta] = useState<PaginationMeta | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchResults, setSearchResults] = useState<Post[]>([]);
+    const [searchResults, setSearchResults] = useState<PostList[]>([]);
 
     // Handle search - only affects modal
     const handleSearch = async (query: string) => {

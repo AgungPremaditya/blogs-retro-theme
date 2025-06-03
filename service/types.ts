@@ -17,7 +17,23 @@ export interface CoverImage {
   public_id: string;
 }
 
-export interface Post {
+// Type for posts in the list view (main page)
+export interface PostList {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  category: {
+    name: string;
+  };
+  author: {
+    username: string;
+  };
+  cover_image: CoverImage | null;
+}
+
+// Type for post detail view with exact API response structure
+export interface PostDetail {
   id: string;
   title: string;
   slug: string;
@@ -31,16 +47,18 @@ export interface Post {
   cover_image: CoverImage | null;
 }
 
-export interface PaginationMeta {
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
-
+// Type for API responses
 export interface ApiResponse<T> {
   data: T;
   meta: PaginationMeta;
+}
+
+// Type for pagination metadata
+export interface PaginationMeta {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
 }
 
 export interface PaginationResponse<T> {

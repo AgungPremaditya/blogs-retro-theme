@@ -1,5 +1,5 @@
 import { makeRequest } from './lib/http';
-import type { Post, ApiResponse } from './types';
+import type { PostList, PostDetail, ApiResponse } from './types';
 
 type GetPostOptions = {
     onProgress?: (progress: number) => void;
@@ -15,14 +15,14 @@ export const blogService = {
         const params: GetAllPostsParams = { page };
         if (search) params.search = search;
         
-        return makeRequest<ApiResponse<Post[]>>('/posts', {
+        return makeRequest<ApiResponse<PostList[]>>('/posts', {
             params,
             onProgress
         });
     },
     
     getPostBySlug(slug: string, options?: GetPostOptions) {
-        return makeRequest<ApiResponse<Post>>(`/posts/${slug}`, {
+        return makeRequest<ApiResponse<PostDetail>>(`/posts/by-slug/${slug}`, {
             onProgress: options?.onProgress
         });
     }
