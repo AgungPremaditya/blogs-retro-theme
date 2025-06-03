@@ -14,7 +14,7 @@ interface SearchBarProps {
 
 export function SearchBar({ 
     onSearch, 
-    placeholder = 'Search documentation...', 
+    placeholder = 'Search...', 
     currentPosts = [],
     currentMeta = null,
     searchQuery,
@@ -44,26 +44,32 @@ export function SearchBar({
 
     return (
         <>
-            <div className="relative max-w-md w-full md:w-96 cursor-pointer" onClick={() => setIsModalOpen(true)}>
-                {/* Main search container */}
-                <div className="relative flex items-center bg-[#1a1a1a]/80 rounded-xl backdrop-blur-sm group">
-                    {/* Search input (display only) */}
-                    <div className="flex-1 px-4 py-3 text-[#EAEAEA]/40 font-mono text-sm">
-                        {placeholder}
-                    </div>
+            <div 
+                className="relative max-w-md w-full md:w-96 cursor-pointer"
+                onClick={() => setIsModalOpen(true)}
+            >
+                {/* Container for the search bar */}
+                <div className="relative group">
+                    {/* Focus/Hover glow effect */}
+                    <div className={`absolute -inset-[1px] bg-yellow-400/20 rounded-xl blur-sm transition-opacity duration-300 ${isSearchFocused ? 'opacity-100' : 'opacity-0'} group-hover:opacity-30 pointer-events-none`}></div>
 
-                    {/* Keyboard shortcut */}
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
-                        <kbd className="px-2 py-1 text-xs font-mono bg-[#252525] text-[#EAEAEA]/70 rounded border border-[#333333]">
-                            ⌘K
-                        </kbd>
-                    </div>
+                    {/* Inner container */}
+                    <div className="relative flex items-center bg-retro-dark border-2 border-yellow-400/20 group-hover:border-yellow-400/40 rounded-xl backdrop-blur-sm transition-all duration-300">
+                        <div className="flex items-center gap-2 w-full px-4 py-3 text-[#EAEAEA]/40 font-mono text-sm rounded-xl group-hover:text-[#EAEAEA]/60 transition-colors duration-300">
+                            <Search className="w-4 h-4" />
+                            <span>{placeholder}</span>
+                        </div>
+                        
+                        {/* Keyboard shortcut hint */}
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 pointer-events-none">
+                            <kbd className="px-2 py-1 text-xs font-mono bg-retro-black text-yellow-400 rounded border border-yellow-400/20 group-hover:border-yellow-400/40 transition-colors duration-300">
+                                ⌘K
+                            </kbd>
+                        </div>
 
-                    {/* Hover effects */}
-                    <div className="absolute inset-0 rounded-xl border border-[#333333] group-hover:border-[#444444] transition-colors duration-300 pointer-events-none"></div>
-                    
-                    {/* Subtle glow effect on hover */}
-                    <div className={`absolute -inset-[1px] bg-[#ffffff]/5 rounded-xl blur-sm transition-opacity duration-300 opacity-0 group-hover:opacity-100 pointer-events-none`}></div>
+                        {/* Scanline effect */}
+                        <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,_rgba(255,216,102,0.03)_50%,_transparent_100%)] bg-[length:100%_4px] animate-scan opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
+                    </div>
                 </div>
             </div>
 
