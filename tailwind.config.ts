@@ -8,25 +8,34 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        retro: {
+          black: '#000000',
+          dark: '#0a0a0a',
+          darker: '#050505',
+          light: '#1a1a1a',
+        },
+        paper: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+        },
+        yellow: {
+          400: '#ffd866',
+        },
+      },
+      animation: {
+        'scan': 'scan 2s linear infinite',
+      },
       keyframes: {
         scan: {
           '0%': { transform: 'translateY(-100%)' },
-          '100%': { transform: 'translateY(100%)' }
-        }
-      },
-      animation: {
-        scan: 'scan 1s linear infinite',
-      },
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        navy: {
-          900: '#1a1b26',
-          800: '#24283b',
+          '100%': { transform: 'translateY(100%)' },
         },
       },
     },
   },
   plugins: [],
 };
+
 export default config;

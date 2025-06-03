@@ -41,4 +41,9 @@ export interface PaginationMeta {
 export interface ApiResponse<T> {
   data: T;
   meta: PaginationMeta;
+}
+
+export interface PaginationResponse<T> {
+  data: T[];
+  meta: PaginationMeta;
 } 

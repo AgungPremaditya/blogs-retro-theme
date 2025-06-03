@@ -1,8 +1,6 @@
-// Re-export types
-export * from './types';
-
-// Re-export errors
+export type * from './types';
 export * from './lib/errors';
+export { blogService } from './blogs';
 
-// Re-export API services
-export * as blogService from './api/blogs'; 
+export * from './blogs';
+export type { GetAllPostsOptions } from './blogs'; 

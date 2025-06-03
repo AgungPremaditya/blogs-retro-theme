@@ -27,6 +27,7 @@ export default function Blogs() {
     const [currentTime, setCurrentTime] = useState<Date | null>(null);
     const [posts, setPosts] = useState<Post[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [loadingProgress, setLoadingProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [meta, setMeta] = useState<PaginationMeta | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -45,9 +46,19 @@ export default function Blogs() {
         const fetchPosts = async () => {
             try {
                 setIsLoading(true);
-                const response = await blogService.getAllPosts(currentPage);
+                setLoadingProgress(0);
+                
+                const response = await blogService.getAllPosts(
+                    currentPage,
+                    (progress: number) => {
+                        console.log('Loading progress:', progress);
+                        setLoadingProgress(progress);
+                    }
+                );
+                
                 setPosts(prevPosts => currentPage === 1 ? response.data : [...prevPosts, ...response.data]);
                 setMeta(response.meta);
+                
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch posts');
                 console.error('Error fetching posts:', err);
@@ -84,22 +95,22 @@ export default function Blogs() {
 
     if (isLoading && posts.length === 0) {
         return (
-            <div className="bg-navy-900 flex min-h-screen flex-col items-center justify-center font-mono text-gray-300">
-                <RetroLoading text="Loading Posts" duration={2000} />
+            <div className="bg-retro-black flex min-h-screen flex-col items-center justify-center font-mono text-gray-300">
+                <RetroLoading text="Loading Posts" progress={loadingProgress} />
             </div>
         );
     }
 
     if (error && posts.length === 0) {
         return (
-            <div className="bg-navy-900 flex min-h-screen flex-col items-center justify-center font-mono text-gray-300">
+            <div className="bg-retro-black flex min-h-screen flex-col items-center justify-center font-mono text-gray-300">
                 <div className="text-2xl text-red-400">Error: {error}</div>
             </div>
         );
     }
 
     return (
-        <div className="bg-navy-900 flex min-h-screen flex-col font-mono text-gray-300">
+        <div className="bg-retro-black flex min-h-screen flex-col font-mono">
             <main className="container mx-auto flex-grow px-4 py-8">
                 <section className="mb-12 text-left">
                     <h2 className="pixelated mb-4 text-3xl font-bold text-yellow-400 md:text-5xl">
@@ -108,45 +119,46 @@ export default function Blogs() {
                         <br />{" "}
                         {currentTime ? formatDate(currentTime) : "Loading..."}
                     </h2>
-                    <p className="text-lg md:text-xl">
+                    <p className="text-lg md:text-xl text-paper-50">
                         Wanna explore somethings?
                     </p>
                 </section>
+
                 <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {posts.map((post) => (
                         <article
                             key={post.id}
-                            className="border-2 border-yellow-400 p-4 hover:bg-navy-800 transition-colors flex flex-col"
+                            className="bg-retro-dark border-2 border-yellow-400 p-4 hover:bg-retro-light transition-colors flex flex-col rounded-lg shadow-lg"
                         >
-                            <div className="mb-4 relative h-48 group overflow-hidden">
+                            <div className="mb-4 relative h-48 group overflow-hidden rounded">
                                 <Image
                                     src={getPostImage(post)}
                                     alt={`Cover image for ${post.title}`}
                                     layout="fill"
                                     objectFit="cover"
-                                    className="rounded transition-transform duration-300 group-hover:scale-110"
+                                    className="transition-transform duration-300 group-hover:scale-110"
                                     priority={false}
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-retro-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             </div>
                             <h3 className="text-xl font-bold mb-2 text-yellow-400 pixelated">
                                 {post.title}
                             </h3>
                             <div className="mb-4 flex flex-wrap gap-2">
-                                <span className="px-2 py-1 bg-yellow-400 text-indigo-900 text-xs rounded pixelated">
+                                <span className="px-2 py-1 bg-yellow-400 text-retro-black text-xs rounded pixelated">
                                     {post.category.name}
                                 </span>
                             </div>
-                            <p className="flex-grow mb-4">
+                            <p className="flex-grow mb-4 text-paper-50">
                                 {post.content.substring(0, 150)}...
                             </p>
                             <div className="mt-4 flex justify-between items-center">
-                                <span className="text-sm text-gray-400">
+                                <span className="text-sm text-paper-200">
                                     By {post.author.username}
                                 </span>
                                 <Link
                                     href={`/blogs/${post.slug}`}
-                                    className="inline-block px-4 py-2 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-indigo-900 transition-colors pixelated font-bold"
+                                    className="inline-block px-4 py-2 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-retro-black transition-colors pixelated font-bold rounded"
                                 >
                                     Read More &gt;
                                 </Link>
@@ -159,12 +171,12 @@ export default function Blogs() {
                     <div className="mt-8 text-center">
                         <button
                             onClick={loadMorePosts}
-                            className="px-6 py-3 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-navy-900 transition-colors pixelated font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-6 py-3 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-retro-black transition-colors pixelated font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed rounded"
                             disabled={isLoading}
                         >
                             {isLoading ? (
                                 <div className="scale-75">
-                                    <RetroLoading text="Loading More" duration={2000} />
+                                    <RetroLoading text="Loading More" progress={loadingProgress} />
                                 </div>
                             ) : (
                                 "Load More"
@@ -174,7 +186,7 @@ export default function Blogs() {
                 )}
             </main>
 
-            <footer className="mt-auto p-4 text-center text-gray-400">
+            <footer className="mt-auto p-4 text-center text-paper-200 bg-retro-darker">
                 <p>&copy; 2024 Schias. All rights reserved.</p>
             </footer>
         </div>

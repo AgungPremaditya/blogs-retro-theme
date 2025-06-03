@@ -3,10 +3,8 @@ import { ApiError } from './errors';
 
 interface RequestOptions extends RequestInit {
   params?: Record<string, string | number>;
-  simulateDelay?: boolean; // Add option to simulate delay
+  onProgress?: (progress: number) => void;
 }
-
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * Makes an HTTP request to the API
@@ -16,14 +14,11 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
  * @throws {ApiError} If the request fails
  */
 export async function makeRequest<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-  try {
-    const { params, simulateDelay = true, ...requestOptions } = options;
-    
-    // Simulate network delay in development
-    if (simulateDelay && process.env.NODE_ENV === 'development') {
-      await delay(2000); // 2 seconds delay
-    }
+  let progressInterval: NodeJS.Timeout | null = null;
 
+  try {
+    const { params, onProgress, ...requestOptions } = options;
+    
     // Build URL with query parameters
     const url = new URL(`${API_CONFIG.BASE_URL}${endpoint}`);
     if (params) {
@@ -37,6 +32,18 @@ export async function makeRequest<T>(endpoint: string, options: RequestOptions =
       ...API_CONFIG.DEFAULT_HEADERS,
       ...options.headers,
     };
+
+    // Start progress simulation
+    let currentProgress = 0;
+    if (onProgress) {
+      onProgress(currentProgress);
+      progressInterval = setInterval(() => {
+        if (currentProgress < 95) {
+          currentProgress += 15;
+          onProgress(currentProgress);
+        }
+      }, 50);
+    }
 
     const response = await fetch(url.toString(), {
       ...requestOptions,
@@ -52,8 +59,25 @@ export async function makeRequest<T>(endpoint: string, options: RequestOptions =
     }
 
     const data = await response.json();
+    
+    // Clear interval and set to 100%
+    if (progressInterval) {
+      clearInterval(progressInterval);
+    }
+    if (onProgress) {
+      onProgress(100);
+    }
+    
     return data;
   } catch (error) {
+    // Clear interval on error
+    if (progressInterval) {
+      clearInterval(progressInterval);
+    }
+    if (options.onProgress) {
+      options.onProgress(0);
+    }
+
     if (error instanceof ApiError) {
       throw error;
     }
