@@ -22,6 +22,12 @@ export function SearchBar({
 }: SearchBarProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
+    const [isMac, setIsMac] = useState(false);
+
+    useEffect(() => {
+        // Check if user is on macOS
+        setIsMac(/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform));
+    }, []);
 
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
         // Check if CMD/CTRL + K is pressed
@@ -62,8 +68,11 @@ export function SearchBar({
                         
                         {/* Keyboard shortcut hint */}
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 pointer-events-none">
-                            <kbd className="px-2 py-1 text-xs font-mono bg-retro-black text-yellow-400 rounded border border-yellow-400/20 group-hover:border-yellow-400/40 transition-colors duration-300">
-                                ⌘K
+                            <kbd className="px-1.5 py-0.5 text-xs font-mono bg-retro-black text-yellow-400 rounded border border-yellow-400/20 group-hover:border-yellow-400/40 transition-colors duration-300">
+                                {isMac ? '⌘' : 'Ctrl'}
+                            </kbd>
+                            <kbd className="px-1.5 py-0.5 text-xs font-mono bg-retro-black text-yellow-400 rounded border border-yellow-400/20 group-hover:border-yellow-400/40 transition-colors duration-300">
+                                K
                             </kbd>
                         </div>
 
