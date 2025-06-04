@@ -13,10 +13,10 @@ export default function Home() {
       <div className="min-h-screen flex items-center">
         <div className="w-full max-w-7xl mx-auto px-4">
           <section>
-            <div className="mb-8 overflow-hidden">
+            <div className="mb-8">
               <TypewriterText />
             </div>
-            <p className="text-gray-300 max-w-xl">
+            <p className="text-gray-300 max-w-3xl text-xl">
               Well known as <span className="text-white font-medium">Schias</span> on the internet. A Nocturnal that really like coffee. 
               A weebs that still learning to become a better human. Also like to playing Games.
             </p>
