@@ -2,24 +2,31 @@
 
 import React from "react";
 import RainContainer, { RippleEffect } from "./components/rain-container";
+import TypewriterText from "./components/typewriter-text";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen">
+    <main className="relative">
       <RainContainer className="-z-10" />
       
-      <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-white pb-[200px]">
-        <div className="max-w-3xl w-full space-y-16">
-          {/* Hero Section */}
-          <section className="text-center space-y-6">
-            <h1 className="text-6xl font-bold tracking-tight">
-              Welcome to My Space
-            </h1>
-            <p className="text-xl text-blue-200">
-              A place where creativity meets technology
+      {/* Hero Section - Full height */}
+      <div className="min-h-screen flex items-center">
+        <div className="w-full max-w-7xl mx-auto px-4">
+          <section>
+            <div className="mb-8 overflow-hidden">
+              <TypewriterText />
+            </div>
+            <p className="text-gray-300 max-w-xl">
+              Well known as <span className="text-white font-medium">Schias</span> on the internet. A Nocturnal that really like coffee. 
+              A weebs that still learning to become a better human. Also like to playing Games.
             </p>
           </section>
+        </div>
+      </div>
 
+      {/* Content Sections */}
+      <div className="w-full max-w-3xl mx-auto px-4 pb-[200px]">
+        <div className="space-y-16">
           {/* Content Cards */}
           <section className="grid md:grid-cols-2 gap-8">
             <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 hover:bg-white/10 transition-all">
