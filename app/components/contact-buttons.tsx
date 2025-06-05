@@ -14,25 +14,25 @@ const socialLinks = [
   {
     name: 'GitHub',
     icon: <FaGithub size={24} />,
-    url: 'https://github.com/yourusername',
+    url: 'https://github.com/AgungPremaditya',
     color: 'hover:bg-gray-800'
   },
   {
     name: 'LinkedIn',
     icon: <FaLinkedin size={24} />,
-    url: 'https://linkedin.com/in/yourusername',
+    url: 'https://www.linkedin.com/in/agung-premaditya/',
     color: 'hover:bg-blue-600'
   },
   {
     name: 'Twitter',
     icon: <FaTwitter size={24} />,
-    url: 'https://twitter.com/yourusername',
+    url: 'https://twitter.com/',
     color: 'hover:bg-blue-400'
   },
   {
     name: 'Email',
     icon: <FaEnvelope size={24} />,
-    url: 'mailto:your.email@example.com',
+    url: 'mailto:pmandala.work@gmail.com',
     color: 'hover:bg-red-500'
   }
 ];

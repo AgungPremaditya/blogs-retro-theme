@@ -25,15 +25,15 @@ const ProjectList = () => {
       title: "Portfolio Website",
       description: "A modern portfolio website built with Next.js and TailwindCSS, featuring a unique rain animation and glass-effect design.",
       tech: ["Next.js", "React", "TailwindCSS"],
-      github: "https://github.com/yourusername/portfolio",
+      github: "https://github.com/AgungPremaditya/blogs-retro-theme",
       live: currentUrl,
       image: "https://res.cloudinary.com/ddy65wooa/image/upload/v1749096589/blog-images/twvef1qpa0g4ojtctvy3.png"
     },
     {
       title: "Blog Platform",
-      description: "A full-stack blog platform with markdown support, user authentication, and a clean, minimalist design.",
+      description: "A personal blog uses a retro-modern style, focused on sharing my thoughts and experiences.",
       tech: ["Node.js", "MongoDB", "React"],
-      github: "https://github.com/yourusername/blog",
+      github: "https://github.com/AgungPremaditya/blogs-retro-theme",
       live: `${currentUrl}/blogs`,
       image: "https://res.cloudinary.com/ddy65wooa/image/upload/v1749096616/blog-images/gxrposl8ahn8pn4wjzmx.png"
     }
@@ -139,8 +139,8 @@ export default function Home() {
               <TypewriterText />
             </div>
             <p className="text-gray-300 max-w-3xl text-base sm:text-lg md:text-xl">
-              Well known as <span className="text-white font-medium underline">Schias</span> on the internet. A Nocturnal that really like coffee. 
-              A weebs that still learning to become a better human. Also like to playing Games.
+              Well known as <span className="text-white font-medium underline">Mandala</span>. A Fullstack Developer that love coffee. 
+              Focused on building scalable and efficient web applications. Also like collaborating with others.
             </p>
           </section>
         </div>
