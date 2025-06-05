@@ -165,12 +165,13 @@ export default function Blogs() {
                                 {/* Image container with hover effects */}
                                 <div className="absolute inset-0 bg-retro-black transition-transform duration-700 ease-in-out group-hover:scale-110">
                                     <Image
-                                        src={getPostImage(post)}
+                                        src={`${getPostImage(post)}?v=2`}
                                         alt={`Cover image for ${post.title}`}
                                         layout="fill"
                                         objectFit="cover"
                                         className="transition-all duration-700 ease-in-out group-hover:brightness-110"
                                         priority={false}
+                                        unoptimized
                                     />
                                 </div>
                                 

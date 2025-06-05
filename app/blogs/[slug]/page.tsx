@@ -196,11 +196,12 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
                     {post.cover_image && (
                         <div className="relative h-[400px] w-full mb-12 rounded-lg overflow-hidden border border-yellow-400/20">
                             <Image
-                                src={getPostImage(post)}
+                                src={`${getPostImage(post)}?v=2`}
                                 alt={post.title}
                                 fill
                                 className="object-cover"
                                 priority
+                                unoptimized
                             />
                         </div>
                     )}
