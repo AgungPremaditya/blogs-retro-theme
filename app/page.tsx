@@ -50,10 +50,11 @@ const ProjectList = () => {
         >
           <div className="aspect-video relative">
             <Image
-              src={project.image}
+              src={`${project.image}?v=2`}
               alt={project.title}
               fill
               className="object-cover"
+              unoptimized
             />
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
               <a 
