@@ -3,6 +3,7 @@
 import React from "react";
 import RainContainer, { RippleEffect } from "./components/rain-container";
 import TypewriterText from "./components/typewriter-text";
+import ScrollButton from "./components/scroll-button";
 
 export default function Home() {
   return (
@@ -10,7 +11,7 @@ export default function Home() {
       <RainContainer className="-z-10" />
       
       {/* Hero Section - Full height */}
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center relative">
         <div className="w-full max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
           <section className="max-w-5xl mx-auto">
             <div className="mb-4 sm:mb-6 md:mb-8">
@@ -22,10 +23,12 @@ export default function Home() {
             </p>
           </section>
         </div>
+
+        <ScrollButton targetId="content-section" />
       </div>
 
       {/* Content Sections */}
-      <div className="w-full max-w-3xl mx-auto px-6 sm:px-8 pb-[200px]">
+      <div id="content-section" className="w-full max-w-3xl mx-auto px-6 sm:px-8 pb-[200px]">
         <div className="space-y-8 sm:space-y-12 md:space-y-16">
           {/* Content Cards */}
           <section className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
