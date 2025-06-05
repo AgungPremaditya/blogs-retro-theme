@@ -10,14 +10,14 @@ export default function Home() {
       <RainContainer className="-z-10" />
       
       {/* Hero Section - Full height */}
-      <div className="min-h-screen flex items-center">
-        <div className="w-full max-w-7xl mx-auto px-4">
-          <section>
-            <div className="mb-8">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-full max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+          <section className="max-w-5xl mx-auto">
+            <div className="mb-4 sm:mb-6 md:mb-8">
               <TypewriterText />
             </div>
-            <p className="text-gray-300 max-w-3xl text-xl">
-              Well known as <span className="text-white font-medium">Schias</span> on the internet. A Nocturnal that really like coffee. 
+            <p className="text-gray-300 max-w-3xl text-base sm:text-lg md:text-xl">
+              Well known as <span className="text-white font-medium underline">Schias</span> on the internet. A Nocturnal that really like coffee. 
               A weebs that still learning to become a better human. Also like to playing Games.
             </p>
           </section>
@@ -25,10 +25,10 @@ export default function Home() {
       </div>
 
       {/* Content Sections */}
-      <div className="w-full max-w-3xl mx-auto px-4 pb-[200px]">
-        <div className="space-y-16">
+      <div className="w-full max-w-3xl mx-auto px-6 sm:px-8 pb-[200px]">
+        <div className="space-y-8 sm:space-y-12 md:space-y-16">
           {/* Content Cards */}
-          <section className="grid md:grid-cols-2 gap-8">
+          <section className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
             <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 hover:bg-white/10 transition-all">
               <h2 className="text-2xl font-semibold mb-4">About Me</h2>
               <p className="text-blue-100">
@@ -47,7 +47,7 @@ export default function Home() {
           </section>
 
           {/* Feature Section */}
-          <section className="bg-white/5 backdrop-blur-lg rounded-xl p-8 space-y-6">
+          <section className="bg-white/5 backdrop-blur-lg rounded-xl p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
             <h2 className="text-3xl font-semibold text-center">Featured Projects</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[1, 2, 3].map((item) => (
@@ -62,7 +62,7 @@ export default function Home() {
           </section>
 
           {/* Contact Section */}
-          <section className="text-center space-y-4">
+          <section className="text-center space-y-3 sm:space-y-4">
             <h2 className="text-3xl font-semibold">Get in Touch</h2>
             <p className="text-blue-200">
               Interested in working together? Let's connect!

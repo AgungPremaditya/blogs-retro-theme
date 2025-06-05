@@ -45,7 +45,7 @@ const TypewriterText = () => {
         key={text}
         initial={{ opacity: 0.5 }}
         animate={{ opacity: 1 }}
-        className="text-8xl md:text-9xl font-bold tracking-tight whitespace-nowrap"
+        className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tight whitespace-nowrap"
       >
         {text}
         <motion.span
