@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
-import { blogService, type Post, type PaginationMeta } from '@/service';
+import { blogService, type PostList, type PaginationMeta } from '@/service';
 import { useDebounce } from '../hooks/useDebounce';
 
 // Custom debounce function
@@ -22,7 +22,7 @@ interface SearchModalProps {
     onSearch: (query: string) => void;
     searchQuery: string;
     setSearchQuery: (query: string) => void;
-    currentPosts?: Post[];
+    currentPosts?: PostList[];
     currentMeta?: PaginationMeta | null;
 }
 
@@ -35,7 +35,7 @@ export function SearchModal({
     currentPosts = [], 
     currentMeta = null
 }: SearchModalProps) {
-    const [displayPosts, setDisplayPosts] = useState<Post[]>(currentPosts);
+    const [displayPosts, setDisplayPosts] = useState<PostList[]>(currentPosts);
     const [isLoading, setIsLoading] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [isVisible, setIsVisible] = useState(false);

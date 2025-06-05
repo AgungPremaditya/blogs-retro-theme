@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Search } from 'lucide-react';
 import { SearchModal } from './SearchModal';
-import { Post, PaginationMeta } from '@/service';
+import { PostList, PaginationMeta } from '@/service';
 
 interface SearchBarProps {
     onSearch: (query: string) => void;
     placeholder?: string;
-    currentPosts?: Post[];
+    currentPosts?: PostList[];
     currentMeta?: PaginationMeta | null;
     searchQuery: string;
     setSearchQuery: (query: string) => void;

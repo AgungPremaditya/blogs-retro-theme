@@ -1,2 +1,2 @@
-export * from './blogService';
-export * from './types'; 
+export * from '../../service/blogs';
+export * from '../../service/types'; 
