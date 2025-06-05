@@ -6,6 +6,7 @@ import TypewriterText from "./components/typewriter-text";
 import ScrollButton from "./components/scroll-button";
 import Skills from "./components/skills";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { 
   FaGithub,
   FaExternalLinkAlt 
@@ -30,6 +31,38 @@ const projects = [
   }
 ];
 
+const fadeInUp = {
+  hidden: { 
+    opacity: 0, 
+    y: 40,
+    scale: 0.95
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 20,
+      duration: 0.8
+    }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.1,
+      staggerChildren: 0.1,
+      duration: 0.3,
+      ease: "easeOut"
+    }
+  }
+};
+
 export default function Home() {
   return (
     <main className="relative">
@@ -52,15 +85,25 @@ export default function Home() {
       </div>
 
       {/* Content Sections */}
-      <div id="content-section" className="w-full">
+      <div id="content-section" className="min-h-screen flex items-center">
         {/* Main Grid Section */}
-        <section className="py-20">
+        <section className="w-full">
           <div className="w-full max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
-            <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <motion.div 
+              className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-20%" }}
+              variants={staggerContainer}
+            >
               {/* Left Column - About Me and Projects */}
               <div className="lg:col-span-2 space-y-6">
                 {/* About Me */}
-                <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 hover:bg-white/10 transition-all">
+                <motion.div 
+                  className="bg-white/5 backdrop-blur-lg rounded-xl p-6 hover:bg-white/10 transition-all"
+                  variants={fadeInUp}
+                  whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+                >
                   <h2 className="text-2xl font-semibold mb-6">About Me</h2>
                   <div className="flex flex-col sm:flex-row gap-6">
                     <div className="w-24 h-24 sm:w-32 sm:h-32 relative rounded-xl overflow-hidden shrink-0">
@@ -77,16 +120,26 @@ export default function Home() {
                       Always exploring new technologies and pushing the boundaries of what's possible.
                     </p>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Projects */}
-                <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 hover:bg-white/10 transition-all">
+                <motion.div 
+                  className="bg-white/5 backdrop-blur-lg rounded-xl p-6 hover:bg-white/10 transition-all"
+                  variants={fadeInUp}
+                  whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+                >
                   <h2 className="text-2xl font-semibold mb-6">Projects</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {projects.map((project) => (
-                      <div 
+                    {projects.map((project, index) => (
+                      <motion.div 
                         key={project.title}
                         className="group relative bg-white/5 rounded-xl overflow-hidden hover:bg-white/10 transition-all"
+                        variants={fadeInUp}
+                        custom={index}
+                        whileHover={{ 
+                          scale: 1.02,
+                          transition: { duration: 0.2 }
+                        }}
                       >
                         <div className="aspect-video relative">
                           <Image
@@ -128,35 +181,40 @@ export default function Home() {
                             ))}
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               </div>
 
               {/* Right Column - Skills */}
-              <Skills />
-            </div>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section className="py-20">
-          <div className="w-full max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
-            <div className="max-w-5xl mx-auto">
-              <div className="rounded-xl p-8 transition-all text-center">
-                <h2 className="text-2xl font-semibold mb-4">Get in Touch</h2>
-                <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-                  Interested in working together? Let's connect and create something amazing! Feel free to reach out for collaborations or just a friendly chat.
-                </p>
-                <button className="px-8 py-3 bg-blue-500 hover:bg-blue-600 rounded-full transition-colors text-white font-medium">
-                  Contact Me
-                </button>
-              </div>
-            </div>
+              <motion.div 
+                variants={fadeInUp}
+                whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+              >
+                <Skills />
+              </motion.div>
+            </motion.div>
           </div>
         </section>
       </div>
+
+      {/* Contact Section */}
+      <section className="py-20">
+        <div className="w-full max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="max-w-5xl mx-auto">
+            <div className="rounded-xl p-8 transition-all text-center">
+              <h2 className="text-2xl font-semibold mb-4">Get in Touch</h2>
+              <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
+                Interested in working together? Let's connect and create something amazing! Feel free to reach out for collaborations or just a friendly chat.
+              </p>
+              <button className="px-8 py-3 bg-blue-500 hover:bg-blue-600 rounded-full transition-colors text-white font-medium">
+                Contact Me
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Ripple Effect positioned at the bottom */}
       <div className="absolute bottom-0 left-0 w-full">
