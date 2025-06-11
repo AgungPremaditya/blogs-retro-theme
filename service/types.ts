@@ -64,4 +64,22 @@ export interface PaginationMeta {
 export interface PaginationResponse<T> {
   data: T[];
   meta: PaginationMeta;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  username: string;
+  bio: string;
+  avatar: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  user: User;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
 } 
