@@ -31,12 +31,12 @@ const ProjectList = () => {
       image: "https://res.cloudinary.com/ddy65wooa/image/upload/v1749096589/blog-images/twvef1qpa0g4ojtctvy3.png"
     },
     {
-      title: "Blog Platform",
-      description: "A personal blog uses a retro-modern style, focused on sharing my thoughts and experiences.",
-      tech: ["Node.js", "MongoDB", "React"],
-      github: "https://github.com/AgungPremaditya/blogs-retro-theme",
-      live: `${currentUrl}/blogs`,
-      image: "https://res.cloudinary.com/ddy65wooa/image/upload/v1749096616/blog-images/gxrposl8ahn8pn4wjzmx.png"
+      title: "Lumina",
+      description: "AI-powered dashboard for customer inquiry tracking and lead management.",
+      tech: ["Next.js", "Supabase", "Recharts"],
+      github: "https://github.com/AgungPremaditya/ai-chat-suggestion",
+      live: "https://luminaproject-seven.vercel.app/",
+      image: "/projects-1.png"
     }
   ];
 
