@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import RainContainer, { RippleEffect } from "./components/rain-container";
 import TypewriterText from "./components/typewriter-text";
 import ScrollButton from "./components/scroll-button";
@@ -15,20 +15,14 @@ import ContactButtons from './components/contact-buttons';
 import { fadeInUp, staggerContainer } from "@/app/lib/animations";
 
 const ProjectList = () => {
-  const [currentUrl, setCurrentUrl] = useState("");
-
-  useEffect(() => {
-    setCurrentUrl(window.location.origin);
-  }, []);
-
   const projects = [
     {
-      title: "Portfolio Website",
-      description: "A modern portfolio website built with Next.js and TailwindCSS, featuring a unique rain animation and glass-effect design.",
-      tech: ["Next.js", "React", "TailwindCSS"],
-      github: "https://github.com/AgungPremaditya/blogs-retro-theme",
-      live: currentUrl,
-      image: "https://res.cloudinary.com/ddy65wooa/image/upload/v1749096589/blog-images/twvef1qpa0g4ojtctvy3.png"
+      title: "Qubi-Flame",
+      description: "Privacy-first QR code generator with custom styles, runs fully in your browser.",
+      tech: ["Next.js", "React", "TypeScript"],
+      github: "https://github.com/AgungPremaditya/qubi",
+      live: "https://qubi-flame.vercel.app/",
+      image: "/projects-2.png"
     },
     {
       title: "Lumina",
