@@ -1,12 +1,13 @@
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_ENDPOINT || "https://schias-blogs.onrender.com",
+  BASE_URL:
+    process.env.NEXT_PUBLIC_API_ENDPOINT || "https://schias-blogs.onrender.com",
   DEFAULT_HEADERS: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 } as const;
 
-// Validate API configuration
-if (!API_CONFIG.BASE_URL) {
-  throw new Error('API_ENDPOINT environment variable is not defined');
-} 
+export const AUTH_STORAGE_KEYS = {
+  TOKEN: "auth_token",
+  USER: "user_data",
+} as const;

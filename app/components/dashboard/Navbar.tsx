@@ -4,8 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 export default function DashboardNavbar() {
   const { user } = useAuth();
 
-  console.log(user);
-
   return (
     <nav className="w-full bg-[#111] border-b border-gray-800">
       <div className="max-w-[1200px] mx-auto px-8 h-16 flex items-center justify-end">

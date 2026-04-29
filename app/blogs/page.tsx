@@ -5,24 +5,8 @@ import { useState, useEffect } from "react";
 import { blogService, type PostList, type PaginationMeta } from "@/service";
 import { RetroLoading } from "@/app/components/RetroLoading";
 import { SearchBar } from "@/app/components/SearchBar";
-
-const getPostImage = (post: PostList): string => {
-    // Array of placeholder images with different designs
-    const placeholders = [
-        `https://placehold.co/600x400/1a1b26/ffd866/png?text=${encodeURIComponent(post.category.name)}`,
-        `https://placehold.co/600x400/1a1b26/ffd866/png?text=${encodeURIComponent(post.title.substring(0, 20))}`,
-        `https://placehold.co/600x400/1a1b26/ffd866/png?text=Blog+Post`,
-    ];
-
-    // If post has a cover_image, use its URL
-    if (post.cover_image?.url) {
-        return post.cover_image.url;
-    }
-
-    // Return a placeholder based on the post ID (to keep it consistent for the same post)
-    const placeholderIndex = post.id.charCodeAt(0) % placeholders.length;
-    return placeholders[placeholderIndex];
-};
+import { getPostImage } from "@/app/lib/post-utils";
+import { formatClockTime, formatLongDate } from "@/app/lib/format";
 
 export default function Blogs() {
     const [currentTime, setCurrentTime] = useState<Date | null>(null);
@@ -71,10 +55,7 @@ export default function Blogs() {
                 
                 const response = await blogService.getAllPosts(
                     currentPage,
-                    (progress: number) => {
-                        console.log('Loading progress:', progress);
-                        setLoadingProgress(progress);
-                    }
+                    setLoadingProgress,
                 );
                 
                 setPosts(prevPosts => currentPage === 1 ? response.data : [...prevPosts, ...response.data]);
@@ -90,23 +71,6 @@ export default function Blogs() {
 
         fetchPosts();
     }, [currentPage]);
-
-    const formatTime = (date: Date) => {
-        return date.toLocaleTimeString(["en-de"], {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-        });
-    };
-
-    const formatDate = (date: Date) => {
-        return date.toLocaleDateString(["en-ID"], {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
-    };
 
     const loadMorePosts = () => {
         if (meta && currentPage < meta.totalPages) {
@@ -136,9 +100,9 @@ export default function Blogs() {
                 <section className="mb-12 text-left">
                     <h2 className="pixelated mb-4 text-3xl font-bold text-yellow-400 md:text-5xl">
                         <span className="text-yellow-100">Its Now</span>{" "}
-                        {currentTime ? formatTime(currentTime) : "Loading..."}
+                        {currentTime ? formatClockTime(currentTime, { seconds: true }) : "Loading..."}
                         <br />{" "}
-                        {currentTime ? formatDate(currentTime) : "Loading..."}
+                        {currentTime ? formatLongDate(currentTime) : "Loading..."}
                     </h2>
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <p className="text-lg md:text-xl text-[#EAEAEA]">

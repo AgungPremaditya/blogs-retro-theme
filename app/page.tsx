@@ -7,11 +7,12 @@ import ScrollButton from "./components/scroll-button";
 import Skills from "./components/skills";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { 
+import {
   FaGithub,
-  FaExternalLinkAlt 
+  FaExternalLinkAlt
 } from 'react-icons/fa';
 import ContactButtons from './components/contact-buttons';
+import { fadeInUp, staggerContainer } from "@/app/lib/animations";
 
 const ProjectList = () => {
   const [currentUrl, setCurrentUrl] = useState("");
@@ -95,38 +96,6 @@ const ProjectList = () => {
   );
 };
 
-const fadeInUp = {
-  hidden: { 
-    opacity: 0, 
-    y: 40,
-    scale: 0.95
-  },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 20,
-      duration: 0.8
-    }
-  }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delayChildren: 0.1,
-      staggerChildren: 0.1,
-      duration: 0.3,
-      ease: "easeOut"
-    }
-  }
-};
-
 export default function Home() {
   return (
     <main className="relative">
@@ -179,8 +148,8 @@ export default function Home() {
                       />
                     </div>
                     <p className="text-blue-100">
-                      I'm a passionate developer who loves creating beautiful and functional web experiences.
-                      Always exploring new technologies and pushing the boundaries of what's possible.
+                      I&apos;m a passionate developer who loves creating beautiful and functional web experiences.
+                      Always exploring new technologies and pushing the boundaries of what&apos;s possible.
                     </p>
                   </div>
                 </motion.div>
@@ -219,7 +188,7 @@ export default function Home() {
             >
               <h2 className="text-2xl font-semibold mb-4">Get in Touch</h2>
               <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-                Interested in working together? Let's connect and create something amazing! Feel free to reach out for collaborations or just a friendly chat.
+                Interested in working together? Let&apos;s connect and create something amazing! Feel free to reach out for collaborations or just a friendly chat.
               </p>
               <div className="flex justify-center">
                 <ContactButtons />

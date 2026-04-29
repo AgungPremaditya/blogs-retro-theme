@@ -2,19 +2,6 @@ import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
 import { blogService, type PostList, type PaginationMeta } from '@/service';
-import { useDebounce } from '../hooks/useDebounce';
-
-// Custom debounce function
-function debounce<T extends (...args: any[]) => any>(
-    func: T,
-    wait: number
-): (...args: Parameters<T>) => void {
-    let timeout: NodeJS.Timeout;
-    return (...args: Parameters<T>) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    };
-}
 
 interface SearchModalProps {
     isOpen: boolean;
@@ -37,11 +24,7 @@ export function SearchModal({
 }: SearchModalProps) {
     const [displayPosts, setDisplayPosts] = useState<PostList[]>(currentPosts);
     const [isLoading, setIsLoading] = useState(false);
-    const [loadingProgress, setLoadingProgress] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
-    
-    // Debounce the search query with 300ms delay
-    const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
     // Handle animation timing
     useEffect(() => {

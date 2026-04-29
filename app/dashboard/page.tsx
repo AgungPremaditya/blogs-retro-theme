@@ -1,8 +1,6 @@
 'use client';
 
 import { useAuth } from '../context/AuthContext';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { FiEdit2, FiMoreVertical, FiEye, FiCalendar } from 'react-icons/fi';
 import TitleHeader from '../components/dashboard/TitleHeader';
 import StatsCards from '../components/dashboard/StatsCards';
@@ -10,18 +8,9 @@ import RecentActivity from '../components/dashboard/RecentActivity';
 import DashboardNavbar from '../components/dashboard/Navbar';
 
 export default function DashboardPage() {
-  const { logout, isAuthenticated, user } = useAuth();
-  const router = useRouter();
-  
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-    }
-  }, [isAuthenticated, router]);
+  const { user } = useAuth();
 
-  if (!isAuthenticated || !user) {
-    return null;
-  }
+  if (!user) return null;
 
   const posts = [
     {

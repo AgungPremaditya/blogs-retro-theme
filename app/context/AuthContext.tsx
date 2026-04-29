@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { authService } from '../../service';
-import type { User } from '../../service/types';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { authService, type User } from "@/service";
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  isLoading: boolean;
   user: User | null;
+  error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  error: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -23,50 +23,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is authenticated
-    const checkAuth = () => {
-      const { token, user } = authService.getStoredAuth();
-      setIsAuthenticated(!!token);
-      setUser(user);
-      setIsLoading(false);
-    };
-
-    checkAuth();
+    const { token, user: storedUser } = authService.getStoredAuth();
+    setIsAuthenticated(!!token);
+    setUser(storedUser);
+    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
+    setError(null);
     try {
-      setError(null);
       const response = await authService.login({ email, password });
       authService.setStoredAuth(response);
-      
       setIsAuthenticated(true);
       setUser(response.user);
-      router.push('/dashboard');
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Login failed';
-      setError(errorMessage);
-      throw error;
+      router.push("/dashboard");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Login failed";
+      setError(message);
+      throw err;
     }
   };
 
   const logout = () => {
-    try {
-      authService.clearStoredAuth();
-      setIsAuthenticated(false);
-      setUser(null);
-      router.push('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
+    authService.clearStoredAuth();
+    setIsAuthenticated(false);
+    setUser(null);
+    router.push("/");
   };
 
-  if (isLoading) {
-    return null; // or a loading spinner
-  }
-
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, error }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, isLoading, user, error, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -75,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-} 
+}

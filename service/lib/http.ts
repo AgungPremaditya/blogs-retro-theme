@@ -1,90 +1,56 @@
-import { API_CONFIG } from '../config';
-import { ApiError } from './errors';
+import { API_CONFIG, AUTH_STORAGE_KEYS } from "../config";
+import { getCookie } from "./cookie";
+import { ApiError } from "./errors";
 
-interface RequestOptions extends RequestInit {
+export interface RequestOptions extends RequestInit {
   params?: Record<string, string | number>;
   onProgress?: (progress: number) => void;
+  auth?: boolean;
 }
 
-/**
- * Makes an HTTP request to the API
- * @param endpoint - API endpoint path
- * @param options - Request options
- * @returns Promise with the response data
- * @throws {ApiError} If the request fails
- */
-export async function makeRequest<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-  let progressInterval: NodeJS.Timeout | null = null;
+export async function makeRequest<T>(
+  endpoint: string,
+  options: RequestOptions = {},
+): Promise<T> {
+  const { params, onProgress, auth, headers, ...rest } = options;
+
+  const url = new URL(`${API_CONFIG.BASE_URL}${endpoint}`);
+  if (params) {
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.append(key, String(value));
+    }
+  }
+
+  const finalHeaders: Record<string, string> = {
+    ...API_CONFIG.DEFAULT_HEADERS,
+    ...(headers as Record<string, string>),
+  };
+  if (auth) {
+    const token = getCookie(AUTH_STORAGE_KEYS.TOKEN);
+    if (token) finalHeaders.Authorization = `Bearer ${token}`;
+  }
+
+  // Indeterminate progress signal: 0 = start, 100 = done. No fake increments.
+  onProgress?.(0);
 
   try {
-    const { params, onProgress, ...requestOptions } = options;
-    
-    // Build URL with query parameters
-    const url = new URL(`${API_CONFIG.BASE_URL}${endpoint}`);
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        url.searchParams.append(key, String(value));
-      });
-    }
-
-    // Merge default headers with provided headers
-    const headers = {
-      ...API_CONFIG.DEFAULT_HEADERS,
-      ...options.headers,
-    };
-
-    // Start progress simulation
-    let currentProgress = 0;
-    if (onProgress) {
-      onProgress(currentProgress);
-      progressInterval = setInterval(() => {
-        if (currentProgress < 95) {
-          currentProgress += 15;
-          onProgress(currentProgress);
-        }
-      }, 50);
-    }
-
-    const response = await fetch(url.toString(), {
-      ...requestOptions,
-      headers,
-    });
+    const response = await fetch(url.toString(), { ...rest, headers: finalHeaders });
 
     if (!response.ok) {
+      const data = await response.json().catch(() => null);
       throw new ApiError(
         `Request failed: ${response.statusText}`,
         response.status,
-        await response.json().catch(() => null)
+        data,
       );
     }
 
-    const data = await response.json();
-    
-    // Clear interval and set to 100%
-    if (progressInterval) {
-      clearInterval(progressInterval);
-    }
-    if (onProgress) {
-      onProgress(100);
-    }
-    
+    const data = (await response.json()) as T;
+    onProgress?.(100);
     return data;
   } catch (error) {
-    // Clear interval on error
-    if (progressInterval) {
-      clearInterval(progressInterval);
-    }
-    if (options.onProgress) {
-      options.onProgress(0);
-    }
-
-    if (error instanceof ApiError) {
-      throw error;
-    }
-    console.error('Request failed:', error);
-    throw new ApiError(
-      'Request failed. Please try again later.',
-      500
-    );
+    onProgress?.(0);
+    if (error instanceof ApiError) throw error;
+    throw new ApiError("Request failed. Please try again later.", 500);
   }
-} 
+}

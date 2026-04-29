@@ -1,52 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { blogService } from "@/service";
-import type { PostDetail } from "@/service/types";
+import { blogService, type PostDetail } from "@/service";
 import { RetroLoading } from "@/app/components/RetroLoading";
+import { getPostImage } from "@/app/lib/post-utils";
+import {
+    calculateReadingTime,
+    formatClockTime,
+    formatPublishedDate,
+} from "@/app/lib/format";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, ArrowUp } from "lucide-react";
-
-const getPostImage = (post: PostDetail): string => {
-    // Array of placeholder images with different designs
-    const placeholders = [
-        `https://placehold.co/600x400/1a1b26/ffd866/png?text=${encodeURIComponent(post.category.name)}`,
-        `https://placehold.co/600x400/1a1b26/ffd866/png?text=${encodeURIComponent(post.title.substring(0, 20))}`,
-        `https://placehold.co/600x400/1a1b26/ffd866/png?text=Blog+Post`,
-    ];
-
-    // If post has a cover_image, use its URL
-    if (post.cover_image?.url) {
-        return post.cover_image.url;
-    }
-
-    // Return a placeholder based on the post ID (to keep it consistent for the same post)
-    const placeholderIndex = post.id.charCodeAt(0) % placeholders.length;
-    return placeholders[placeholderIndex];
-};
-
-const calculateReadingTime = (content: string): number => {
-    const wordsPerMinute = 200;
-    const words = content.trim().split(/\s+/).length;
-    return Math.ceil(words / wordsPerMinute);
-};
-
-const formatTime = (date: Date): string => {
-    return date.toLocaleTimeString(["en-de"], {
-        hour: "2-digit",
-        minute: "2-digit",
-    });
-};
-
-const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-};
 
 export default function BlogDetail({ params }: { params: { slug: string } }) {
     const [post, setPost] = useState<PostDetail | null>(null);
@@ -79,10 +44,7 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
                 setIsLoading(true);
                 setLoadingProgress(0);
                 const response = await blogService.getPostBySlug(params.slug, {
-                    onProgress: (progress: number) => {
-                        console.log('Loading progress:', progress);
-                        setLoadingProgress(progress);
-                    }
+                    onProgress: setLoadingProgress,
                 });
                 
                 if (!response.data) {
@@ -136,9 +98,9 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
                 <div className="container mx-auto px-2">
                     <div className="max-w-[960px] mx-auto">
                         <div className="text-yellow-400 text-sm">
-                            Its Now {formatTime(currentTime)}
+                            Its Now {formatClockTime(currentTime)}
                             <br />
-                            {formatDate(currentTime.toISOString())}
+                            {formatPublishedDate(currentTime)}
                         </div>
                     </div>
                 </div>
@@ -186,7 +148,7 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
                         <div className="mt-6 flex items-center gap-4 text-sm text-paper-200">
                             <span>By {post.author.username}</span>
                             <span>•</span>
-                            <span>{formatDate(post.published_at)}</span>
+                            <span>{formatPublishedDate(post.published_at)}</span>
                             <span>•</span>
                             <span>{readingTime} min read</span>
                         </div>
@@ -231,7 +193,7 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
                     <div className="mt-16 pt-8 border-t border-yellow-400/20">
                         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-8">
                             <div className="text-yellow-400 text-sm">
-                                Published on {formatDate(post.published_at)} by {post.author.username}
+                                Published on {formatPublishedDate(post.published_at)} by {post.author.username}
                             </div>
                             <Link 
                                 href="/blogs" 

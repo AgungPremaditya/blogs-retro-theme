@@ -1,29 +1,18 @@
-import { makeRequest } from './lib/http';
-import type { PostList, PostDetail, ApiResponse } from './types';
+import { makeRequest } from "./lib/http";
+import type { ApiResponse, PostDetail, PostList } from "./types";
 
-type GetPostOptions = {
-    onProgress?: (progress: number) => void;
-};
-
-type GetAllPostsParams = {
-    page: number;
-    search?: string;
-};
+type ProgressFn = (progress: number) => void;
 
 export const blogService = {
-    getAllPosts(page: number, onProgress?: (p: number) => void, search?: string) {
-        const params: GetAllPostsParams = { page };
-        if (search) params.search = search;
-        
-        return makeRequest<ApiResponse<PostList[]>>('/posts', {
-            params,
-            onProgress
-        });
-    },
-    
-    getPostBySlug(slug: string, options?: GetPostOptions) {
-        return makeRequest<ApiResponse<PostDetail>>(`/posts/by-slug/${slug}`, {
-            onProgress: options?.onProgress
-        });
-    }
-}; 
+  getAllPosts(page: number, onProgress?: ProgressFn, search?: string) {
+    const params: Record<string, string | number> = { page };
+    if (search) params.search = search;
+    return makeRequest<ApiResponse<PostList[]>>("/posts", { params, onProgress });
+  },
+
+  getPostBySlug(slug: string, options?: { onProgress?: ProgressFn }) {
+    return makeRequest<ApiResponse<PostDetail>>(`/posts/by-slug/${slug}`, {
+      onProgress: options?.onProgress,
+    });
+  },
+};
