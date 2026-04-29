@@ -33,7 +33,7 @@ const ProjectList = () => {
     {
       title: "Lumina",
       description: "AI-powered dashboard for customer inquiry tracking and lead management.",
-      tech: ["Next.js", "Supabase", "Recharts"],
+      tech: ["Next.js", "Supabase", "OpenAI"],
       github: "https://github.com/AgungPremaditya/ai-chat-suggestion",
       live: "https://luminaproject-seven.vercel.app/",
       image: "/projects-1.png"
